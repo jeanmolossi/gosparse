@@ -10,6 +10,9 @@ type Visibility int
 type Field struct {
 	Predicate  Predicate
 	Visibility Visibility
+	// TODO: to fields like: "fields[username_in]=john,anne"
+	// should implement a way to recover filter value (john, anne)
+	FilterBy []string
 }
 
 type Fields struct {
