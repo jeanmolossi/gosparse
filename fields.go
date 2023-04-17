@@ -5,11 +5,11 @@ import (
 	"strings"
 )
 
-type Action int
+type Visibility int
 
 type Field struct {
-	Predicate Predicate
-	Action    Action
+	Predicate  Predicate
+	Visibility Visibility
 }
 
 type Fields struct {
@@ -17,7 +17,7 @@ type Fields struct {
 }
 
 const (
-	LIST Action = iota
+	LIST Visibility = iota
 	HIDE
 )
 
@@ -53,7 +53,7 @@ func resetValues(v []string) []string {
 	return v
 }
 
-func getAction(v string) Action {
+func getVisibility(v string) Visibility {
 	action := regexp.
 		MustCompile(`^-`).
 		FindString
@@ -71,11 +71,11 @@ func removeMinus(v string) string {
 		ReplaceAllString(v, "")
 }
 
-func extractFieldValues(v []string) Action {
+func extractFieldVisibility(v []string) Visibility {
 	v = resetValues(v)
 
 	for _, value := range v {
-		return getAction(value)
+		return getVisibility(value)
 	}
 
 	return LIST
@@ -118,8 +118,8 @@ func (f *Fields) Add(field string, values []string) {
 			}
 
 			f.FieldMap[field] = Field{
-				Predicate: NONE,
-				Action:    getAction(value),
+				Predicate:  NONE,
+				Visibility: getVisibility(value),
 			}
 		}
 
@@ -127,8 +127,8 @@ func (f *Fields) Add(field string, values []string) {
 	}
 
 	f.FieldMap[GetFieldName(field)] = Field{
-		Predicate: GetPredicate(field),
-		Action:    extractFieldValues(values),
+		Predicate:  GetPredicate(field),
+		Visibility: extractFieldVisibility(values),
 	}
 }
 
@@ -136,6 +136,6 @@ func (f *Fields) Get(field string) Field {
 	return f.FieldMap[field]
 }
 
-func (f *Field) Get() Action {
-	return f.Action
+func (f *Field) Get() Visibility {
+	return f.Visibility
 }
