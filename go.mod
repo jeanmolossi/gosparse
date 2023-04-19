@@ -1,4 +1,4 @@
-module gosparse
+module github.com/jeanmolossi/gosparse
 
 go 1.20
 

@@ -3,10 +3,10 @@ package include_test
 import (
 	"context"
 	"fmt"
-	"gosparse/internal/include"
 	"net/url"
 	"testing"
 
+	"github.com/jeanmolossi/gosparse/internal/include"
 	"github.com/stretchr/testify/require"
 )
 
