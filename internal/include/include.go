@@ -27,9 +27,10 @@ type Includes map[string]struct{}
 // para o construtor de Includes
 type IncludeOpt func(*Includes)
 
+type CtxKey struct{}
+
 const (
 	SEARCH_PARAM string = "include"
-	INCLUDES     string = "@gosparse/includes"
 )
 
 // Handle vai receber um contexto e a query da request.
@@ -58,7 +59,7 @@ func (r Includes) Handle(ctx context.Context, query url.Values) (context.Context
 		}
 	}
 
-	return context.WithValue(ctx, INCLUDES, values), nil
+	return context.WithValue(ctx, CtxKey{}, values), nil
 }
 
 // Get recebe o contexto com os valores de "include" já validados e tratados.
@@ -68,7 +69,7 @@ func (r Includes) Handle(ctx context.Context, query url.Values) (context.Context
 //
 //	[]string{}
 func (r Includes) Get(ctx context.Context) []string {
-	if values, ok := ctx.Value(INCLUDES).([]string); ok {
+	if values, ok := ctx.Value(CtxKey{}).([]string); ok {
 		return values
 	}
 

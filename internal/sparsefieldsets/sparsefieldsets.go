@@ -31,9 +31,10 @@ type Fields map[string][]string
 // para o construtor de Fieldset
 type FieldsetOpt func(*Fieldset)
 
+type CtxKey struct{}
+
 const (
 	SEARCH_PARAM string = "fields"
-	FIELDS       string = "@gosparse/fields"
 )
 
 // extractFieldFromQuery recebe a query e devolve um novo
@@ -76,14 +77,14 @@ func (f Fieldset) Handle(ctx context.Context, query url.Values) (context.Context
 		}
 	}
 
-	return context.WithValue(ctx, FIELDS, fields), nil
+	return context.WithValue(ctx, CtxKey{}, fields), nil
 }
 
 // Get recebe o contexto e a chave do campo de "fields" já validado e tratado.
 //
 // Caso o contexto não tenha o valor do campo será retornado um slice vazio.
 func (f Fieldset) Get(ctx context.Context, field string) []string {
-	if values, ok := ctx.Value(FIELDS).(Fields); ok {
+	if values, ok := ctx.Value(CtxKey{}).(Fields); ok {
 		return values[field]
 	}
 
