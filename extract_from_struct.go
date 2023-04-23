@@ -139,6 +139,10 @@ func extractor(tag string) config {
 		}
 	}
 
+	if c.Relation {
+		c.Select = true
+	}
+
 	return c
 }
 
