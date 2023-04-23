@@ -91,6 +91,17 @@ func (f Fieldset) Get(ctx context.Context, field string) []string {
 	return make([]string, 0)
 }
 
+// GetAll recebe o contexto e devolve os fields contidos.
+//
+// Caso não haja Fields no contexto será devolvida uma instância vazia
+func (f Fieldset) GetAll(ctx context.Context) Fields {
+	if values, ok := ctx.Value(CtxKey{}).(Fields); ok {
+		return values
+	}
+
+	return make(Fields)
+}
+
 // AddField recebe a chave do campo aceito no parâmetro "fields".
 //
 // Caso a chave recebida já esteja na lista de campos suportados, ela
