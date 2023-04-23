@@ -127,6 +127,19 @@ func (s Sort) Get(ctx context.Context, f string) Sorting {
 	return ASC
 }
 
+// GetAll recebe o contexto e retorna o Sort contido no contexto.
+//
+// Caso o contexto não contenha o Sort, uma instância vazia será
+// devolvida.
+func (s Sort) GetAll(ctx context.Context) Sort {
+	sort, err := GetSort(ctx)
+	if err != nil {
+		return make(Sort)
+	}
+
+	return sort
+}
+
 // AddField recebe o campo aceito no parâmetro "sort".
 //
 // Caso a chave recebida já esteja na lista de campos suportados, ela
