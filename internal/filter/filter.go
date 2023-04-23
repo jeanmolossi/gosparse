@@ -96,6 +96,19 @@ func (f Filters) Get(ctx context.Context, field string) Field {
 	return Field{}
 }
 
+// GetAll recebe o contexto e retorna uma instância completa
+// dos filtros contidos no contexto.
+//
+// Caso os filtros não estejam presentes no contexto, será
+// devolvido uma instância vazia dos Filters
+func (f Filters) GetAll(ctx context.Context) Filters {
+	if values, ok := ctx.Value(CtxKey{}).(Filters); ok {
+		return values
+	}
+
+	return make(Filters)
+}
+
 // AddFilter recebe a chave do campo aceito no parâmetro "filter".
 //
 // Caso a chave recebida já esteja na lista de campos suportados, ela
