@@ -39,6 +39,8 @@ const (
 
 	SIZE   accepted = "size"
 	NUMBER accepted = "number"
+	OFFSET accepted = "offset"
+	LIMIT  accepted = "size"
 )
 
 var (
@@ -111,6 +113,14 @@ func StrToPageParam(p string) (accepted, error) {
 		return NUMBER, nil
 	}
 
+	if strings.EqualFold(p, string(OFFSET)) {
+		return OFFSET, nil
+	}
+
+	if strings.EqualFold(p, "limit") {
+		return SIZE, nil
+	}
+
 	return "", fmt.Errorf("invalid pagination param %s", p)
 }
 
@@ -159,6 +169,8 @@ func (p Pagination) Get(ctx context.Context, field accepted) int {
 		return p[SIZE]
 	case NUMBER:
 		return p[NUMBER]
+	case OFFSET:
+		return p[OFFSET]
 	}
 
 	return -1
@@ -186,6 +198,7 @@ func New(opt ...PaginationOpt) *Pagination {
 	pagination := &Pagination{
 		NUMBER: 1,
 		SIZE:   10,
+		OFFSET: 0,
 	}
 
 	if len(opt) == 0 {

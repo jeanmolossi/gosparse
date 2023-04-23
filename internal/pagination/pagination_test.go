@@ -15,6 +15,7 @@ func TestPagination(t *testing.T) {
 		query        url.Values
 		expectNumber int
 		expectSize   int
+		expectOffset int
 		err          error
 	}{
 		{
@@ -24,6 +25,15 @@ func TestPagination(t *testing.T) {
 				"page[size]":   {"30"},
 			},
 			expectNumber: 1,
+			expectSize:   30,
+		},
+		{
+			desc: "should get correct params",
+			query: url.Values{
+				"page[offset]": {"30"},
+				"page[limit]":  {"30"},
+			},
+			expectOffset: 30,
 			expectSize:   30,
 		},
 		{
@@ -66,7 +76,9 @@ func TestPagination(t *testing.T) {
 
 			require.EqualValues(t, err, tt.err)
 			require.Equal(t, tt.expectSize, pagination.Get(ctx, SIZE))
+			require.Equal(t, tt.expectSize, pagination.Get(ctx, LIMIT))
 			require.Equal(t, tt.expectNumber, pagination.Get(ctx, NUMBER))
+			require.Equal(t, tt.expectOffset, pagination.Get(ctx, OFFSET))
 		})
 	}
 
