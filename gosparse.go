@@ -1,6 +1,9 @@
 package gosparse
 
 import (
+	"context"
+	"net/url"
+
 	"github.com/jeanmolossi/gosparse/internal/filter"
 	"github.com/jeanmolossi/gosparse/internal/include"
 	"github.com/jeanmolossi/gosparse/internal/pagination"
@@ -8,12 +11,50 @@ import (
 	"github.com/jeanmolossi/gosparse/internal/sparsefieldsets"
 )
 
+// Gosparse contém a configuração base de parâmetros aceitos
 type Gosparse struct {
 	Include    include.Includes
 	Fieldset   sparsefieldsets.Fieldset
 	Filter     filter.Filters
 	Pagination pagination.Pagination
 	Sort       sort.Sort
+}
+
+// Handle recebe o contexto e a querystring da request e
+// extraí todos os parâmetros de filtro, seleção e ordenação.
+//
+//   - Include
+//   - Fieldset
+//   - Filter
+//   - Pagination
+//   - Sort
+func (g Gosparse) Handle(ctx context.Context, query url.Values) (context.Context, error) {
+	ctx, err := g.Include.Handle(ctx, query)
+	if err != nil {
+		return ctx, err
+	}
+
+	ctx, err = g.Fieldset.Handle(ctx, query)
+	if err != nil {
+		return ctx, err
+	}
+
+	ctx, err = g.Filter.Handle(ctx, query)
+	if err != nil {
+		return ctx, err
+	}
+
+	ctx, err = g.Pagination.Handle(ctx, query)
+	if err != nil {
+		return ctx, err
+	}
+
+	ctx, err = g.Sort.Handle(ctx, query)
+	if err != nil {
+		return ctx, err
+	}
+
+	return ctx, err
 }
 
 // Options ------------------------------
